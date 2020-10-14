@@ -1,0 +1,121 @@
+estimate_map: true
+
+batch_size: 4096
+point_dim: 2
+use_zero_mean_reduction: true
+
+potential_model_type: 'nn'
+potential_nn_layers: [128, 256]
+transport_map_nn_layers: [128, 256]
+infer_sample_count: 100000
+
+supp_desc:
+    shape: 'bbox_inferred'
+    percentile: 0.9999
+
+distribution_list:
+    - name: 'source0'
+      shape: 'cube'
+      p_min: [0,0]
+      p_max: [0.4,0.2]
+      weight: 0.5
+    - name: 'source1'
+      shape: 'cube'
+      p_min: [0.8, 0.6]
+      p_max: [1, 1]
+      weight: 0.5
+
+regularizer_desc: 
+    name: 'l2'
+    safe_version: False
+    safe_threshold: 20.0
+    eps: 1.0e-5
+    scale_eps: False
+
+potential_optimizer_desc:
+    kind: 'Adam'        
+    learning_rate: 1.0e-4
+
+map_optimizer_desc:
+    kind: 'Adam'        
+    learning_rate: 1.0e-4
+
+moving_averages:
+    potential_enabled: true
+    decay: 0.99
+
+potential_total_epochs: 20000
+map_total_epochs: 20000
+
+
+potential_ckpt_dir: 'checkpoints/potential'
+map_ckpt_dir: 'checkpoints/map'
+ckpt_max_to_keep: 2
+ckpt_save_period: 10000
+log_dir: 'log_dir'
+log_frequency: 200
+print_frequency: 100
+
+# config for visualization
+discrete_num: 200
+discrete_extent: [0, 1, 0, 1]
+val_frequency: 5000
+marginalization_batch_size: 20 # must divide discrete_num ^ 2
+val_entries:
+    marginal:
+        enabled: true
+        npy_dir: 'marginal_dir'
+        vis_dir: 'marginal_vis_dir'
+        prefix: 'step'
+    potential:
+        enabled: true
+        npy_dir: 'potential_dir'
+        vis_dir: 'potential_vis_dir'
+        prefix: 'step'
+    potential_gradient:
+        enabled: true
+        num_samples: 50000
+        npy_dir: 'grad_dir'
+        vis_dir: 'grad_vis_dir'
+        prefix: 'step'
+    barycentric_projection:
+        enabled: true
+        num_samples: 50000
+        npy_dir: 'bproj_dir'
+        vis_dir: 'bproj_vis_dir'
+        prefix: 'step'
+    map:
+        enabled: true
+        num_samples: 50000
+        npy_dir: 'map_dir'
+        vis_dir: 'map_vis_dir'
+        prefix: 'step'
+    source:
+        enabled: true
+        npy_dir: 'source_dir'
+        vis_dir: 'source_vis_dir'
+        vis_name: 'all.png'
+
+test:
+    sample_barycenter:
+        num_samples: 10000
+        npy_dir: 'barycenter_dir'
+        npy_file: 'barycenter.npy'
+        vis_dir: 'barycenter_vis_dir'
+        vis_name: 'barycenter.png'
+
+    sample_plans_mcmc:
+        kind: 'Metropolis'
+        eps: 1.0e-15
+        num_results: 100000
+        num_burnin_steps: 2000
+        init_state: [[0.5,0.5], [0.5,0.5]]
+        proposal_scale: 0.05
+        thinning: 5
+        # step_size: 0.001
+        # num_leapfrog_steps: 2
+        
+        npy_dir: 'mcmc_dir'
+        npy_file: 'mcmc.npy'
+        vis_dir: 'mcmc_vis_dir'
+        vis_name: 'mcmc.png'

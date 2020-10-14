@@ -1,0 +1,25 @@
+batch_size: 4096
+potential_model_type: 'nn'
+potential_nn_layers: [128, 256]
+
+regularizer_desc: 
+    name: 'l2'
+    eps: 1.0e-5
+
+potential_optimizer_desc:
+    kind: 'Adam'        
+    learning_rate: 1.0e-4
+
+potential_total_epochs: 20000
+train_multi_steps: 20
+
+potential_ckpt_dir: 'checkpoints/potential'
+map_ckpt_dir: 'checkpoints/map'
+ckpt_max_to_keep: 2
+ckpt_save_period: 10000
+log_dir: 'log_dir'
+log_frequency: 1000
+print_frequency: 1000
+
+eval_num_batches: 1000
+eval_file: 'result.pkl'

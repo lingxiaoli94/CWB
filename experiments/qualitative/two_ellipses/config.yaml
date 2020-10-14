@@ -1,0 +1,175 @@
+estimate_map: true
+
+batch_size: 4096
+point_dim: 2
+use_zero_mean_reduction: true
+
+potential_model_type: 'nn'
+potential_nn_layers: [128, 256]
+transport_map_nn_layers: [128, 256]
+infer_sample_count: 100000
+
+supp_desc:
+    shape: 'bbox_inferred'
+    percentile: 0.9999
+
+distribution_list:
+    - name: 'source1'
+      shape: 'composite'
+      nu1:
+          shape: 'ellipse'
+          center: [0.337515, 0.353243]
+          a: 0.201926
+          b: 0.131901
+          T: [[-0.968182,0.250249],[-0.250249,-0.968182]]
+          point_set_size: 1000
+          gaussian_noise: 0.005
+      w1: 0.5
+      nu2:
+          shape: 'ellipse'
+          center: [0.357909, 0.330526]
+          a: 0.138327
+          b: 0.055757
+          T: [[-0.953226,0.302257],[-0.302257,-0.953226]]
+          point_set_size: 1000
+          gaussian_noise: 0.005
+      w2: 0.5
+      weight: 0.3333
+    - name: 'source2'
+      shape: 'composite'
+      nu1:
+          shape: 'ellipse'
+          center: [0.458521, 0.708062]
+          a: 0.129270
+          b: 0.273326
+          T: [[0.284939,-0.958546],[0.958546,0.284939]]
+          point_set_size: 1000
+          gaussian_noise: 0.005
+      w1: 0.5
+      nu2:
+          shape: 'ellipse'
+          center: [0.452639, 0.702233]
+          a: -0.063850
+          b: 0.076297
+          T: [[0.149023,-0.988834],[0.988834,0.149023]]
+          point_set_size: 1000
+          gaussian_noise: 0.005
+      w2: 0.5
+      weight: 0.3333
+    - name: 'source3'
+      shape: 'composite'
+      nu1:
+          shape: 'ellipse'
+          center: [0.594622, 0.591061]
+          a: 0.115275
+          b: 0.193877
+          T: [[0.868655,-0.495418],[0.495418,0.868655]]
+          point_set_size: 1000
+          gaussian_noise: 0.005000
+      w1: 0.5
+      nu2:
+          shape: 'ellipse'
+          center: [0.600265, 0.608209]
+          a: -0.064951
+          b: 0.129087
+          T: [[0.801588,-0.597876],[0.597876,0.801588]]
+          point_set_size: 1000
+          gaussian_noise: 0.005000
+      w2: 0.5
+      weight: 0.3333
+
+
+regularizer_desc: 
+    name: 'l2'
+    safe_version: False
+    safe_threshold: 20.0
+    eps: 1.0e-5
+    scale_eps: False
+
+potential_optimizer_desc:
+    kind: 'Adam'        
+    learning_rate: 1.0e-4
+
+map_optimizer_desc:
+    kind: 'Adam'        
+    learning_rate: 1.0e-4
+
+moving_averages:
+    potential_enabled: true
+    decay: 0.99
+
+potential_total_epochs: 20000
+map_total_epochs: 20000
+
+
+potential_ckpt_dir: 'checkpoints/potential'
+map_ckpt_dir: 'checkpoints/map'
+ckpt_max_to_keep: 2
+ckpt_save_period: 10000
+log_dir: 'log_dir'
+log_frequency: 200
+print_frequency: 100
+
+# config for visualization
+discrete_num: 200
+discrete_extent: [0, 1, 0, 1]
+val_frequency: 10000
+marginalization_batch_size: 20 # must divide discrete_num ^ 2
+val_entries:
+    marginal:
+        enabled: true
+        npy_dir: 'marginal_dir'
+        vis_dir: 'marginal_vis_dir'
+        prefix: 'step'
+    potential:
+        enabled: true
+        npy_dir: 'potential_dir'
+        vis_dir: 'potential_vis_dir'
+        prefix: 'step'
+    potential_gradient:
+        enabled: true
+        num_samples: 50000
+        npy_dir: 'grad_dir'
+        vis_dir: 'grad_vis_dir'
+        prefix: 'step'
+    barycentric_projection:
+        enabled: true
+        num_samples: 50000
+        npy_dir: 'bproj_dir'
+        vis_dir: 'bproj_vis_dir'
+        prefix: 'step'
+    map:
+        enabled: true
+        num_samples: 50000
+        npy_dir: 'map_dir'
+        vis_dir: 'map_vis_dir'
+        prefix: 'step'
+    source:
+        enabled: true
+        npy_dir: 'source_dir'
+        vis_dir: 'source_vis_dir'
+        vis_name: 'all.png'
+
+test:
+    sample_barycenter:
+        num_samples: 10000
+        npy_dir: 'barycenter_dir'
+        npy_file: 'barycenter.npy'
+        vis_dir: 'barycenter_vis_dir'
+        vis_name: 'barycenter.png'
+
+    sample_plans_mcmc:
+        kind: 'Metropolis'
+        eps: 1.0e-15
+        num_results: 100000
+        num_burnin_steps: 2000
+        init_state: [[0.5,0.5], [0.5,0.5]]
+        proposal_scale: 0.05
+        thinning: 5
+        # step_size: 0.001
+        # num_leapfrog_steps: 2
+        
+        npy_dir: 'mcmc_dir'
+        npy_file: 'mcmc.npy'
+        vis_dir: 'mcmc_vis_dir'
+        vis_name: 'mcmc.png'

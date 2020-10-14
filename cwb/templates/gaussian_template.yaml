@@ -1,0 +1,66 @@
+estimate_map: true
+
+batch_size: 8192
+use_zero_mean_reduction: true
+
+potential_model_type: 'nn'
+potential_nn_layers: [128, 256]
+transport_map_nn_layers: [128, 256]
+infer_sample_count: 2000000
+
+supp_desc:
+    shape: 'bbox_inferred'
+    percentile: 0.9999
+
+regularizer_desc: 
+    name: 'l2'
+    safe_version: False
+    safe_threshold: 20.0
+    eps: 1.0e-4
+    scale_eps: true
+    base_diameter_sqr: 10.0
+
+potential_optimizer_desc:
+    kind: 'Adam'        
+    learning_rate: 1.0e-4
+
+map_optimizer_desc:
+    kind: 'Adam'        
+    learning_rate: 1.0e-4
+
+moving_averages:
+    potential_enabled: false
+
+potential_total_epochs: 20000
+map_total_epochs: 0 # 30000
+preferred_monge_map_kind: 'potential_gradient'
+
+potential_ckpt_dir: 'checkpoints/potential'
+map_ckpt_dir: 'checkpoints/map'
+ckpt_max_to_keep: 2
+ckpt_save_period: 1000
+log_dir: 'log_dir'
+log_frequency: 200
+print_frequency: 100
+
+# config for visualization
+val_frequency: 5000
+val_entries:
+    marginal:
+        enabled: false
+    potential:
+        enabled: false
+    potential_gradient:
+        enabled: false
+    barycentric_projection:
+        enabled: false
+    map:
+        enabled: true
+        num_samples: 2000
+        npy_dir: 'map_dir'
+        vis_dir: 'map_vis_dir'
+        prefix: 'step'
+    source:
+        enabled: false
+    mcmc:
+        enabled: false

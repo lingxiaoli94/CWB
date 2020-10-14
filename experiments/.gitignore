@@ -1,0 +1,12 @@
+bproj_dir
+grad_dir
+log_dir
+marginal_dir
+source_dir
+map_dir
+barycenter_dir
+potential_dir
+checkpoints
+
+poisson
+gaussian
