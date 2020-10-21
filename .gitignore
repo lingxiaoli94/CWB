@@ -1,7 +1,6 @@
 __pycache__/
 .ipynb_checkpoints/
 *.dat
-*.png
 *.avi
 .DS_Store
 *vis_dir
