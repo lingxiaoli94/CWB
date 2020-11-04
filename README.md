@@ -1,5 +1,5 @@
 # Continuous Regularized Wasserstein Barycenters
-Lingxiao Li, [Aude Genevay](https://audeg.github.io/), [Mikhail Yurochkin](https://moonfolk.github.io/), [Justin Solomon](https://people.csail.mit.edu/jsolomon/)
+[Lingxiao Li](http://people.csail.mit.edu/lingxiao/), [Aude Genevay](https://audeg.github.io/), [Mikhail Yurochkin](https://moonfolk.github.io/), [Justin Solomon](https://people.csail.mit.edu/jsolomon/)
 [[arXiv](https://arxiv.org/abs/2008.12534)]
 
 NeurIPS 2020
